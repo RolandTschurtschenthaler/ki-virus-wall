@@ -71,7 +71,6 @@ export default function App() {
   const [filter, setFilter] = useState("all"); // all | infected | clean
   const [team, setTeam] = useState("all");
   const [showImporter, setShowImporter] = useState(false);
-  const [csvText, setCsvText] = useState("name,team,role\nMax Mustermann,Sales,AE\nErika Musterfrau,Marketing,Content");
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(people));
