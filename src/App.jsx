@@ -166,62 +166,42 @@ export default function App() {
 
 function PersonCard({ person, onToggle }) {
   const num = String(person.number ?? person.id ?? "").padStart(3, "0");
-  const initials = useMemo(
-    () => person.name.split(" ").map(w => w[0]).slice(0,2).join("").toUpperCase(),
-    [person.name]
-  );
+  const initials = useMemo(() => person.name.split(" ").map(w => w[0]).slice(0,2).join("").toUpperCase(), [person.name]);
   const active = !!person.infected;
 
   return (
     <motion.div layout className="flex flex-col items-center">
-      {/* Hex-Kachel */}
-      <div
-        className={[
-          "sg-hex",
-          active ? "sg-neon" : "sg-muted",
-          "w-[160px] sm:w-[180px] md:w-[190px] aspect-[1/1.12] p-3 md:p-4",
-          "transition-transform duration-200 hover:-translate-y-1"
-        ].join(" ")}
-      >
-        {/* Foto oder Initialen */}
-        <div className="sg-photo mx-auto w-[72%] mt-[10%] mb-3 grid place-items-center">
-          {person.photoUrl ? (
-            <img
-              src={person.photoUrl}
-              alt={person.name}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          ) : (
-            <div className="w-full h-full grid place-items-center text-2xl md:text-3xl font-semibold text-slate-100">
-              {initials}
-            </div>
-          )}
-        </div>
+      {/* NEUER WRAPPER: bekommt den Glow */}
+      <div className={["sg-hex-wrap", active ? "sg-neon" : "sg-muted", "hover:-translate-y-1"].join(" ")}>
+        {/* Geclippte Kachel: nur Border/Hintergrund/Innenleben */}
+        <div className={["sg-hex", active ? "sg-hex--active" : "", "w-[160px] sm:w-[180px] md:w-[190px] aspect-[1/1.12] p-3 md:p-4"].join(" ")}>
+          <div className="sg-photo mx-auto w-[72%] mt-[10%] mb-3 grid place-items-center">
+            {person.photoUrl ? (
+              <img src={person.photoUrl} alt={person.name} className="w-full h-full object-cover" loading="lazy" />
+            ) : (
+              <div className="w-full h-full grid place-items-center text-2xl md:text-3xl font-semibold text-slate-100">
+                {initials}
+              </div>
+            )}
+          </div>
 
-        {/* Name & Rolle */}
-        <div className="text-center px-2">
-          <div className="text-sm md:text-base font-medium truncate">{person.name}</div>
-          <div className="text-[10px] md:text-xs text-slate-300 truncate">{person.role}</div>
-        </div>
+          <div className="text-center px-2">
+            <div className="text-sm md:text-base font-medium truncate">{person.name}</div>
+            <div className="text-[10px] md:text-xs text-slate-300 truncate">{person.role}</div>
+          </div>
 
-        {/* Nummer */}
-        <div className="mt-2 text-center">
-          <span className="sg-num inline-block bg-black/60 rounded-md px-3 py-1 text-slate-50 text-sm md:text-base">
-            {num}
-          </span>
+          <div className="mt-2 text-center">
+            <span className="sg-num inline-block bg-black/60 rounded-md px-3 py-1 text-slate-50 text-sm md:text-base">{num}</span>
+          </div>
         </div>
       </div>
 
-      {/* Button */}
       <button
         onClick={onToggle}
         className={[
           "mt-3 w-[160px] sm:w-[180px] md:w-[190px]",
           "rounded-xl px-3 py-2 text-sm font-medium",
-          active
-            ? "bg-pink-600/80 hover:bg-pink-500 text-white"
-            : "bg-slate-800 hover:bg-slate-700 text-slate-100"
+          active ? "bg-pink-600/80 hover:bg-pink-500 text-white" : "bg-slate-800 hover:bg-slate-700 text-slate-100"
         ].join(" ")}
       >
         {active ? "Leuchtet ✨" : "Überzeugen 💡"}
