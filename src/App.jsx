@@ -165,18 +165,18 @@ export default function App() {
           </div>
         )}
 
-<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 place-items-center">
-  {filtered.map(p => (
-    <PersonCard key={p.id} person={p} onToggle={() => toggleInfected(p.id)} />
-  ))}
-  {filtered.length === 0 && (
-    <div className="col-span-full text-center text-slate-400">
-      Keine Treffer – Filter anpassen oder CSV importieren.
-    </div>
-  )}
-</div>
-  );
-}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 place-items-center">
+          {filtered.map(p => (
+            <PersonCard key={p.id} person={p} onToggle={() => toggleInfected(p.id)} />
+          ))}
+          {filtered.length === 0 && (
+            <div className="col-span-full text-center text-slate-400">
+              Keine Treffer – Filter anpassen oder CSV importieren.
+            </div>
+          )}
+        </div>
+          );
+        }
 
 function PersonCard({ person, onToggle }) {
   // Nummer wie bei Squid Game – nimm person.number, sonst aus id generieren
