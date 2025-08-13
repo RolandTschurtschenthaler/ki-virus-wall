@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* === Squid Game Tile Styles (Neon) === */
 :root{
   --sg-neon:#ff4da6;      /* Pink */
