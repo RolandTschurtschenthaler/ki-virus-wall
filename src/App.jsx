@@ -46,7 +46,9 @@ export default function App() {
 
   const filtered = useMemo(() => {
     return people.filter(p => {
-      const matchesQ = q.trim().length === 0 || `${p.name} ${p.role} ${p.team}`.toLowerCase().includes(q.toLowerCase());
+      const matchesQ =
+        q.trim().length === 0 ||
+        `${p.name} ${p.role} ${p.team}`.toLowerCase().includes(q.toLowerCase());
       const matchesTeam = team === "all" || p.team === team;
       const matchesState = filter === "all" || (filter === "infected" ? p.infected : !p.infected);
       return matchesQ && matchesTeam && matchesState;
@@ -82,7 +84,10 @@ export default function App() {
         name: cols[nameIdx],
         team: cols[teamIdx] || "",
         role: cols[roleIdx] || "",
-        infected: infectedIdx >= 0 ? ["true", "1", "yes", "ja"].includes((cols[infectedIdx] || "").toLowerCase()) : false
+        infected:
+          infectedIdx >= 0
+            ? ["true", "1", "yes", "ja"].includes((cols[infectedIdx] || "").toLowerCase())
+            : false
       });
     }
     if (rows.length) setPeople(rows);
@@ -98,7 +103,7 @@ export default function App() {
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">KI‑Virus Wall</h1>
+            <h1 className="text-3xl font-bold tracking-tight">KI-Virus Wall</h1>
             <p className="text-slate-400">Wer "leuchtet", ist bereits infiziert 💚</p>
           </div>
           <div className="w-full md:w-1/2">
@@ -114,11 +119,15 @@ export default function App() {
 
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap items-center gap-2">
-            <Segmented value={filter} onChange={setFilter} items={[
-              { value: "all", label: "Alle" },
-              { value: "infected", label: "Infiziert" },
-              { value: "clean", label: "Noch zu überzeugen" }
-            ]} />
+            <Segmented
+              value={filter}
+              onChange={setFilter}
+              items={[
+                { value: "all", label: "Alle" },
+                { value: "infected", label: "Infiziert" },
+                { value: "clean", label: "Noch zu überzeugen" }
+              ]}
+            />
             <select
               value={team}
               onChange={e => setTeam(e.target.value)}
@@ -131,8 +140,18 @@ export default function App() {
             </select>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => setShowImporter(v => !v)} className="rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-sm hover:border-emerald-500">CSV importieren</button>
-            <button onClick={resetAll} className="rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-sm hover:border-rose-500">Reset</button>
+            <button
+              onClick={() => setShowImporter(v => !v)}
+              className="rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-sm hover:border-emerald-500"
+            >
+              CSV importieren
+            </button>
+            <button
+              onClick={resetAll}
+              className="rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-sm hover:border-rose-500"
+            >
+              Reset
+            </button>
           </div>
         </div>
 
@@ -151,7 +170,9 @@ export default function App() {
 
         {showImporter && (
           <div className="bg-slate-900/60 rounded-2xl p-4 border border-slate-800 space-y-3">
-            <p className="text-sm text-slate-300">Füge CSV ein (Spalten: <code>name,team,role[,infected]</code>). Beispiel unten:</p>
+            <p className="text-sm text-slate-300">
+              Füge CSV ein (Spalten: <code>name,team,role[,infected]</code>). Beispiel unten:
+            </p>
             <textarea
               value={csvText}
               onChange={e => setCsvText(e.target.value)}
@@ -159,8 +180,18 @@ export default function App() {
               className="w-full rounded-xl bg-slate-950 border border-slate-800 p-3 font-mono text-xs"
             />
             <div className="flex gap-2">
-              <button onClick={() => importCSV(csvText)} className="rounded-xl bg-emerald-600 hover:bg-emerald-500 px-3 py-2 text-sm font-medium">Importieren</button>
-              <button onClick={() => setShowImporter(false)} className="rounded-xl bg-slate-800 hover:bg-slate-700 px-3 py-2 text-sm">Schließen</button>
+              <button
+                onClick={() => importCSV(csvText)}
+                className="rounded-xl bg-emerald-600 hover:bg-emerald-500 px-3 py-2 text-sm font-medium"
+              >
+                Importieren
+              </button>
+              <button
+                onClick={() => setShowImporter(false)}
+                className="rounded-xl bg-slate-800 hover:bg-slate-700 px-3 py-2 text-sm"
+              >
+                Schließen
+              </button>
             </div>
           </div>
         )}
@@ -175,9 +206,10 @@ export default function App() {
             </div>
           )}
         </div>
-        </div>
-          );
-        }
+      </div>    {/* schließt max-w-7xl */}
+    </div>      {/* schließt min-h-screen */}
+  );
+}
 
 function PersonCard({ person, onToggle }) {
   // Nummer wie bei Squid Game – nimm person.number, sonst aus id generieren
@@ -196,8 +228,8 @@ function PersonCard({ person, onToggle }) {
       {/* Hex/Raute-Kachel */}
       <div
         className={[
-          "sg-hex",                       // Form + Hintergrund
-          "w-[160px] sm:w-[180px] md:w-[190px] aspect-[1/1.12]", // Größe
+          "sg-hex",
+          "w-[160px] sm:w-[180px] md:w-[190px] aspect-[1/1.12]",
           "p-3 md:p-4",
           "transition-transform duration-200 hover:-translate-y-1",
           active ? "sg-neon" : "sg-muted"
