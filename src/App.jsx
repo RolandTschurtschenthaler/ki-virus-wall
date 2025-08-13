@@ -88,6 +88,13 @@ export default function App() {
     setPeople(prev => prev.map(p => (p.id === id ? { ...p, infected: !p.infected } : p)));
   }
 
+  function resetAll() {
+    if (confirm("Alle Daten zurücksetzen?")) {
+      setPeople(DEMO_PEOPLE);
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
