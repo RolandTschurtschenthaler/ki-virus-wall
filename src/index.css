@@ -18,10 +18,7 @@
 /* Hex/Raute-Form via clip-path */
 .sg-hex {
   clip-path: polygon(50% 0%, 92% 25%, 92% 75%, 50% 100%, 8% 75%, 8% 25%);
-  background: radial-gradient(120% 120% at 50% 0%,
-              rgba(255,77,166,0.08) 0%,
-              rgba(166,77,255,0.06) 35%,
-              rgba(10,10,15,1) 60%);
+  background: var(--sg-neon); /* durchgehend pink */
 }
 
 /* Leuchtrahmen (aktiv) */
