@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root{
   --sg-neon:#ff4da6;      /* Pink Neon */
   --sg-neon-2:#a64dff;    /* Violett Neon */
