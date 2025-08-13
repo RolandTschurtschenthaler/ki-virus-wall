@@ -206,8 +206,8 @@ export default function App() {
             </div>
           )}
         </div>
-      </div>    {/* schließt max-w-7xl */}
-    </div>      {/* schließt min-h-screen */}
+      </div>   
+    </div>      
   );
 }
 
