@@ -212,30 +212,24 @@ export default function App() {
 }
 
 function PersonCard({ person, onToggle }) {
-  // Nummer wie bei Squid Game – nimm person.number, sonst aus id generieren
   const num = String(person.number ?? person.id ?? "").padStart(3, "0");
-
-  // Falls ihr Photos habt: person.photoUrl befüllen, sonst Initialen anzeigen
   const initials = useMemo(
     () => person.name.split(" ").map(w => w[0]).slice(0,2).join("").toUpperCase(),
     [person.name]
   );
-
   const active = !!person.infected;
 
   return (
     <motion.div layout className="flex flex-col items-center">
-      {/* Hex/Raute-Kachel */}
+      {/* Hex-Kachel */}
       <div
         className={[
           "sg-hex",
-          "w-[160px] sm:w-[180px] md:w-[190px] aspect-[1/1.12]",
-          "p-3 md:p-4",
-          "transition-transform duration-200 hover:-translate-y-1",
-          active ? "sg-neon" : "sg-muted"
+          active ? "sg-hex-infected" : "sg-hex-clean",
+          "hover:-translate-y-1"
         ].join(" ")}
       >
-        {/* Bild / Initialen */}
+        {/* Foto oder Initialen */}
         <div className="sg-photo mx-auto w-[72%] mt-[10%] mb-3 grid place-items-center">
           {person.photoUrl ? (
             <img
@@ -251,28 +245,27 @@ function PersonCard({ person, onToggle }) {
           )}
         </div>
 
-        {/* Name */}
+        {/* Name & Rolle */}
         <div className="text-center px-2">
           <div className="text-sm md:text-base font-medium truncate">{person.name}</div>
-          <div className="text-[10px] md:text-xs text-slate-400 truncate">
+          <div className="text-[10px] md:text-xs text-slate-300 truncate">
             {person.role} · {person.team}
           </div>
         </div>
 
-        {/* Nummer unten wie im Poster */}
-        <div className="mt-2 md:mt-3 text-center">
+        {/* Nummer */}
+        <div className="mt-2 text-center">
           <span className="sg-num inline-block bg-black/60 rounded-md px-3 py-1 text-slate-50 text-sm md:text-base">
             {num}
           </span>
         </div>
       </div>
 
-      {/* Action-Button darunter */}
+      {/* Button */}
       <button
         onClick={onToggle}
         className={[
-          "mt-3 w-[160px] sm:w-[180px] md:w-[190px]",
-          "rounded-xl px-3 py-2 text-sm font-medium",
+          "mt-3 w-[160px] rounded-xl px-3 py-2 text-sm font-medium",
           active
             ? "bg-pink-600/80 hover:bg-pink-500 text-white"
             : "bg-slate-800 hover:bg-slate-700 text-slate-100"
