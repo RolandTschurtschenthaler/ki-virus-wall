@@ -1,3 +1,53 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* === Squid Game Tile Styles === */
+:root{
+  --sg-neon:#ff4da6;      /* Pink */
+  --sg-neon-2:#a64dff;    /* Violett */
+  --sg-bg1:#0a0a0f;       /* dunkler Grund */
+  --sg-bg2:#121425;
+}
+
+@keyframes sgNeonPulse {
+  0%,100% { box-shadow: 0 0 10px var(--sg-neon), 0 0 22px var(--sg-neon); }
+  50%     { box-shadow: 0 0 22px var(--sg-neon-2), 0 0 40px var(--sg-neon-2); }
+}
+
+/* Hex/Raute-Form via clip-path */
+.sg-hex {
+  clip-path: polygon(50% 0%, 92% 25%, 92% 75%, 50% 100%, 8% 75%, 8% 25%);
+  background: radial-gradient(120% 120% at 50% 0%,
+              rgba(255,77,166,0.08) 0%,
+              rgba(166,77,255,0.06) 35%,
+              rgba(10,10,15,1) 60%);
+}
+
+/* Leuchtrahmen (aktiv) */
+.sg-neon {
+  border: 3px solid var(--sg-neon);
+  animation: sgNeonPulse 2.2s ease-in-out infinite;
+}
+
+/* Deaktiviert/neutral */
+.sg-muted {
+  border: 3px solid rgba(255,255,255,0.08);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+}
+
+/* runder Bildcontainer – leicht über die Form gestellt */
+.sg-photo {
+  aspect-ratio: 1 / 1;
+  border-radius: 20%;
+  overflow: hidden;
+  background: linear-gradient(180deg, #1f243a 0%, #0d0f1a 100%);
+  border: 2px solid rgba(255,255,255,0.08);
+}
+
+/* Nummer im „digitalen“ Look */
+.sg-num {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 6px rgba(255,255,255,0.8), 0 0 16px var(--sg-neon);
+}
