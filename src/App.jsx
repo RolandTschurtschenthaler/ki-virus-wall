@@ -181,25 +181,73 @@ export default function App() {
 }
 
 function PersonCard({ person, onToggle }) {
-  const initials = useMemo(() => person.name.split(" ").map(w => w[0]).slice(0,2).join("").toUpperCase(), [person.name]);
+  // Nummer wie bei Squid Game – nimm person.number, sonst aus id generieren
+  const num = String(person.number ?? person.id ?? "").padStart(3, "0");
+
+  // Falls ihr Photos habt: person.photoUrl befüllen, sonst Initialen anzeigen
+  const initials = useMemo(
+    () => person.name.split(" ").map(w => w[0]).slice(0,2).join("").toUpperCase(),
+    [person.name]
+  );
+
+  const active = !!person.infected;
+
   return (
-    <motion.div
-      layout
-      whileHover={{ y: -3 }}
-      className={`relative rounded-2xl border ${person.infected ? "border-emerald-500 glow" : "border-slate-800"} bg-gradient-to-br from-slate-900 to-slate-950 p-4 flex flex-col items-center text-center`}
-    >
-      <div className={`w-16 h-16 rounded-2xl mb-3 flex items-center justify-center text-xl font-semibold ${person.infected ? "bg-emerald-700/30" : "bg-slate-800"}`}>
-        {initials}
+    <motion.div layout className="flex flex-col items-center">
+      {/* Hex/Raute-Kachel */}
+      <div
+        className={[
+          "sg-hex",                       // Form + Hintergrund
+          "w-[160px] sm:w-[180px] md:w-[190px] aspect-[1/1.12]", // Größe
+          "p-3 md:p-4",
+          "transition-transform duration-200 hover:-translate-y-1",
+          active ? "sg-neon" : "sg-muted"
+        ].join(" ")}
+      >
+        {/* Bild / Initialen */}
+        <div className="sg-photo mx-auto w-[72%] mt-[10%] mb-3 grid place-items-center">
+          {person.photoUrl ? (
+            <img
+              src={person.photoUrl}
+              alt={person.name}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full grid place-items-center text-2xl md:text-3xl font-semibold text-slate-100">
+              {initials}
+            </div>
+          )}
+        </div>
+
+        {/* Name */}
+        <div className="text-center px-2">
+          <div className="text-sm md:text-base font-medium truncate">{person.name}</div>
+          <div className="text-[10px] md:text-xs text-slate-400 truncate">
+            {person.role} · {person.team}
+          </div>
+        </div>
+
+        {/* Nummer unten wie im Poster */}
+        <div className="mt-2 md:mt-3 text-center">
+          <span className="sg-num inline-block bg-black/60 rounded-md px-3 py-1 text-slate-50 text-sm md:text-base">
+            {num}
+          </span>
+        </div>
       </div>
-      <div className="space-y-1 w-full">
-        <div className="font-medium truncate" title={person.name}>{person.name}</div>
-        <div className="text-xs text-slate-400 truncate" title={`${person.role} · ${person.team}`}>{person.role} · {person.team}</div>
-      </div>
+
+      {/* Action-Button darunter */}
       <button
         onClick={onToggle}
-        className={`mt-3 w-full rounded-xl px-3 py-2 text-sm font-medium ${person.infected ? "bg-emerald-600 hover:bg-emerald-500" : "bg-slate-800 hover:bg-slate-700"}`}
+        className={[
+          "mt-3 w-[160px] sm:w-[180px] md:w-[190px]",
+          "rounded-xl px-3 py-2 text-sm font-medium",
+          active
+            ? "bg-pink-600/80 hover:bg-pink-500 text-white"
+            : "bg-slate-800 hover:bg-slate-700 text-slate-100"
+        ].join(" ")}
       >
-        {person.infected ? "Leuchtet ✨" : "Überzeugen 💡"}
+        {active ? "Leuchtet ✨" : "Überzeugen 💡"}
       </button>
     </motion.div>
   );
