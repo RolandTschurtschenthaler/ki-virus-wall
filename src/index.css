@@ -2,55 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
-/* === Squid Game Tile Styles (Neon) === */
 :root{
-  --sg-neon:#ff4da6;      /* Pink */
-  --sg-neon-2:#a64dff;    /* Violett */
-  --sg-bg1:#0a0a0f;
-  --sg-bg2:#121425;
+  --sg-neon:#ff4da6;
+  --sg-neon-2:#a64dff;
 }
 
-@keyframes sgNeonPulse {
-  0%,100% { box-shadow: 0 0 12px var(--sg-neon), 0 0 26px var(--sg-neon); }
-  50%     { box-shadow: 0 0 22px var(--sg-neon-2), 0 0 42px var(--sg-neon-2); }
+/* Wrapper für Glow – NICHT geclippt */
+.sg-hex-wrap {
+  display: inline-block;
+  transition: transform .2s ease;
 }
 
-/* Hex/Raute-Form + dunkler Hintergrund */
+/* Pulsierender Glow über drop-shadow (wirkt um die ganze Hex-Form) */
+@keyframes sgGlowPulse {
+  0%,100% {
+    filter:
+      drop-shadow(0 0 6px var(--sg-neon))
+      drop-shadow(0 0 14px var(--sg-neon));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 14px var(--sg-neon))
+      drop-shadow(0 0 28px var(--sg-neon-2));
+  }
+}
+.sg-neon { animation: sgGlowPulse 2.2s ease-in-out infinite; }
+.sg-muted { filter: none; }
+
+/* Die eigentliche Hex-Kachel bleibt geclippt, bekommt nur Border/Hintergrund */
 .sg-hex {
   clip-path: polygon(50% 0%, 92% 25%, 92% 75%, 50% 100%, 8% 75%, 8% 25%);
   background: radial-gradient(120% 120% at 50% 0%,
               rgba(255,77,166,0.08) 0%,
               rgba(166,77,255,0.06) 35%,
               rgba(10,10,15,1) 60%);
-  transition: transform .2s ease;
+  border: 3px solid rgba(255,255,255,0.08); /* neutral */
 }
+.sg-hex--active { border-color: var(--sg-neon); }
 
-/* LEUCHTEN, wenn infiziert */
-.sg-neon {
-  border: 3px solid var(--sg-neon);
-  animation: sgNeonPulse 2.2s ease-in-out infinite;
-  /* stärkeres Dauerleuchten zusätzlich zur Animation */
-  box-shadow: 0 0 10px var(--sg-neon), 0 0 24px var(--sg-neon-2);
-  will-change: box-shadow;
-}
+.sg-photo { aspect-ratio: 1 / 1; border-radius: 20%; overflow: hidden; background: linear-gradient(180deg,#1f243a 0%,#0d0f1a 100%); border: 2px solid rgba(255,255,255,0.08); }
 
-/* neutral ohne Glow */
-.sg-muted {
-  border: 3px solid rgba(255,255,255,0.08);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
-}
-
-/* Bildcontainer */
-.sg-photo {
-  aspect-ratio: 1 / 1;
-  border-radius: 20%;
-  overflow: hidden;
-  background: linear-gradient(180deg, #1f243a 0%, #0d0f1a 100%);
-  border: 2px solid rgba(255,255,255,0.08);
-}
-
-.sg-num {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  letter-spacing: 0.06em;
-  text-shadow: 0 0 6px rgba(255,255,255,0.8), 0 0 16px var(--sg-neon);
-}
+.sg-num { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; letter-spacing:.06em; text-shadow:0 0 6px rgba(255,255,255,.8),0 0 16px var(--sg-neon); }
