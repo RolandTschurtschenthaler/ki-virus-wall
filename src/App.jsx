@@ -61,7 +61,6 @@ const DEMO_PEOPLE = [
   { id: "55", name: "Tobias", role: "SEO Manager", photoUrl: "https://cdn.bitrix24.de/b12352915/main/2a4/2a4f04fc5d6f5fed29d42810d83ec09f/Screenshot%202024-12-13%20143920.png", infected: false }
 ];
 
-
 export default function App() {
   const [people, setPeople] = useState(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -69,30 +68,21 @@ export default function App() {
   });
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState("all"); // all | infected | clean
-  const [team, setTeam] = useState("all");
-  const [showImporter, setShowImporter] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(people));
-  }, [people]);
-
-  const teams = useMemo(() => {
-    const t = Array.from(new Set(people.map(p => p.team))).sort();
-    return t;
   }, [people]);
 
   const infectedCount = useMemo(() => people.filter(p => p.infected).length, [people]);
 
   const filtered = useMemo(() => {
     return people.filter(p => {
-      const matchesQ =
-        q.trim().length === 0 ||
-        `${p.name} ${p.role} ${p.team}`.toLowerCase().includes(q.toLowerCase());
-      const matchesTeam = team === "all" || p.team === team;
+      const hay = `${p.name} ${p.role}`.toLowerCase();
+      const matchesQ = q.trim().length === 0 || hay.includes(q.toLowerCase());
       const matchesState = filter === "all" || (filter === "infected" ? p.infected : !p.infected);
-      return matchesQ && matchesTeam && matchesState;
+      return matchesQ && matchesState;
     });
-  }, [people, q, filter, team]);
+  }, [people, q, filter]);
 
   function toggleInfected(id) {
     setPeople(prev => prev.map(p => (p.id === id ? { ...p, infected: !p.infected } : p)));
@@ -104,6 +94,75 @@ export default function App() {
       localStorage.removeItem(STORAGE_KEY);
     }
   }
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">KI-Virus Wall</h1>
+            <p className="text-slate-400">Wer „leuchtet“, ist bereits infiziert 💚</p>
+          </div>
+          <div className="w-full md:w-1/2">
+            <input
+              value={q}
+              onChange={e => setQ(e.target.value)}
+              placeholder="Suche nach Name oder Rolle…"
+              className="w-full rounded-2xl bg-slate-900 border border-slate-700 px-4 py-2 outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <Segmented
+            value={filter}
+            onChange={setFilter}
+            items={[
+              { value: "all", label: "Alle" },
+              { value: "infected", label: "Infiziert" },
+              { value: "clean", label: "Noch zu überzeugen" }
+            ]}
+          />
+          <div className="flex gap-2">
+            <button onClick={resetAll} className="rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-sm hover:border-rose-500">
+              Reset
+            </button>
+          </div>
+        </div>
+
+        {/* Progress */}
+        <div className="bg-slate-900/60 rounded-2xl p-4 border border-slate-800">
+          <div className="flex items-center justify-between text-sm text-slate-400">
+            <span>{infectedCount} von {people.length} überzeugt</span>
+            <span>{Math.round((infectedCount / Math.max(people.length, 1)) * 100)}%</span>
+          </div>
+          <div className="mt-2 h-3 rounded-xl bg-slate-800 overflow-hidden">
+            <div
+              className="h-full bg-emerald-500"
+              style={{ width: `${(infectedCount / Math.max(people.length, 1)) * 100}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 place-items-center">
+          {filtered.map(p => (
+            <PersonCard key={p.id} person={p} onToggle={() => toggleInfected(p.id)} />
+          ))}
+          {filtered.length === 0 && (
+            <div className="col-span-full text-center text-slate-400">
+              Keine Treffer – Suchbegriff ändern.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Subcomponents ---------- */
 
 function PersonCard({ person, onToggle }) {
   const num = String(person.number ?? person.id ?? "").padStart(3, "0");
@@ -119,8 +178,9 @@ function PersonCard({ person, onToggle }) {
       <div
         className={[
           "sg-hex",
-          active ? "sg-hex-infected" : "sg-hex-clean",
-          "hover:-translate-y-1"
+          active ? "sg-neon" : "sg-muted",
+          "w-[160px] sm:w-[180px] md:w-[190px] aspect-[1/1.12] p-3 md:p-4",
+          "transition-transform duration-200 hover:-translate-y-1"
         ].join(" ")}
       >
         {/* Foto oder Initialen */}
@@ -142,9 +202,7 @@ function PersonCard({ person, onToggle }) {
         {/* Name & Rolle */}
         <div className="text-center px-2">
           <div className="text-sm md:text-base font-medium truncate">{person.name}</div>
-          <div className="text-[10px] md:text-xs text-slate-300 truncate">
-            {person.role} · {person.team}
-          </div>
+          <div className="text-[10px] md:text-xs text-slate-300 truncate">{person.role}</div>
         </div>
 
         {/* Nummer */}
@@ -159,7 +217,8 @@ function PersonCard({ person, onToggle }) {
       <button
         onClick={onToggle}
         className={[
-          "mt-3 w-[160px] rounded-xl px-3 py-2 text-sm font-medium",
+          "mt-3 w-[160px] sm:w-[180px] md:w-[190px]",
+          "rounded-xl px-3 py-2 text-sm font-medium",
           active
             ? "bg-pink-600/80 hover:bg-pink-500 text-white"
             : "bg-slate-800 hover:bg-slate-700 text-slate-100"
