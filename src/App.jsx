@@ -165,18 +165,16 @@ export default function App() {
           </div>
         )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {filtered.map(p => (
-            <PersonCard key={p.id} person={p} onToggle={() => toggleInfected(p.id)} />
-          ))}
-          {filtered.length === 0 && (
-            <div className="col-span-full text-center text-slate-400">Keine Treffer – Filter anpassen oder CSV importieren.</div>
-          )}
-        </div>
-
-        <footer className="pt-6 text-center text-xs text-slate-500">Demo – lokal gespeichert. Für ein echtes Teamboard können wir Google Sheet / Airtable / Bitrix24 anbinden.</footer>
-      </div>
+<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 place-items-center">
+  {filtered.map(p => (
+    <PersonCard key={p.id} person={p} onToggle={() => toggleInfected(p.id)} />
+  ))}
+  {filtered.length === 0 && (
+    <div className="col-span-full text-center text-slate-400">
+      Keine Treffer – Filter anpassen oder CSV importieren.
     </div>
+  )}
+</div>
   );
 }
 
